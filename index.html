@@ -196,11 +196,10 @@
 
     <!-- Preloader -->
     <div id="preloader">
-        <svg class="loader-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" stroke="#005CB4" stroke-width="5"/>
-            <path d="M10 50 Q 50 10 90 50" stroke="#C9002B" stroke-width="5" stroke-linecap="round"/>
-            <path d="M10 50 Q 50 90 90 50" stroke="#005CB4" stroke-width="5" stroke-linecap="round"/>
-        </svg>
+        <!-- Substituído o SVG abstrato pelo Logo Oficial da Pepsi -->
+        <img src="https://logos-world.net/wp-content/uploads/2020/04/Pepsi-Logo.png" 
+             alt="Pepsi Logo Loading" 
+             class="loader-logo w-32 md:w-48 object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
     </div>
 
     <!-- Grain Overlay -->
@@ -246,10 +245,10 @@
         <div class="absolute inset-0 w-full h-full z-0 bg-black">
             <div class="absolute inset-0 bg-black/40 z-10"></div> <!-- Overlay Darkener -->
             
-            <!-- Video Fix: Added poster (capa) so it shows image if video fails -->
-            <video id="heroVideo" autoplay loop muted playsinline class="w-full h-full object-cover opacity-80" poster="https://images.unsplash.com/photo-1629203851122-3726ec685227?q=80&w=2070">
-                <!-- Primary Source -->
-                <source src="1280x640_1.mp4" type="video/mp4">
+            <!-- Video Fix: Added explicit error handling and playsinline for mobile -->
+            <video id="heroVideo" autoplay loop muted playsinline webkit-playsinline class="w-full h-full object-cover opacity-80" poster="https://images.unsplash.com/photo-1629203851122-3726ec685227?q=80&w=2070">
+                <!-- Primary Source: Updated to user file -->
+                <source src="vídeo inicial.mp4" type="video/mp4">
             </video>
         </div>
 
@@ -299,15 +298,15 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
                 
-                <!-- Product 1: Zero Sugar -->
+                <!-- Product 1: Zero Sugar (Updated to Bottle as requested) -->
                 <div class="product-card group relative">
                     <div class="absolute inset-0 bg-blue-600/5 rounded-3xl transform rotate-3 transition-transform group-hover:rotate-6"></div>
                     <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-10 text-center relative z-10 product-inner h-full flex flex-col justify-between hover:border-blue-500/50 transition-colors">
                         <div class="mb-8 relative h-80 flex items-center justify-center">
-                             <!-- Glowing background behind can -->
+                             <!-- Glowing background behind bottle -->
                              <div class="absolute w-40 h-40 bg-blue-500/30 rounded-full blur-3xl group-hover:bg-blue-400/50 transition-all"></div>
-                             <!-- Uses user filename: PEP-ZERO-SLEEK-CG.png -->
-                             <img src="PEP-ZERO-SLEEK-CG.png" 
+                             <!-- Uses user filename: garrafa-zero-caff.png -->
+                             <img src="garrafa-zero-caff.png" 
                                   onerror="this.src='https://pngimg.com/d/pepsi_PNG22.png'; this.style.filter='grayscale(100%) contrast(1.2)'" 
                                   alt="Pepsi Zero Açúcar" 
                                   class="h-full object-contain can-shadow relative z-10 transform group-hover:scale-110 transition-transform duration-500">
@@ -407,10 +406,10 @@
             
             <div class="relative w-full max-w-5xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-[0_0_60px_rgba(0,92,180,0.3)] group border border-white/10">
                 <!-- Video Element using User's Filename -->
+                <!-- Removed fallback source to ensure only user video is attempted -->
                 <video id="mainVideo" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" poster="https://wallpaperaccess.com/full/1330836.jpg">
-                    <source src="PEP-3004_PEPSI_TITAN_2024_GenericSpot_020_PT_NoEndFrame_02.mp4" type="video/mp4">
-                    <!-- Fallback if user's file isn't present -->
-                    <source src="https://videos.pexels.com/video-files/3205917/3205917-hd_1920_1080_25fps.mp4" type="video/mp4">
+                    <!-- Primary Source: Updated to user file -->
+                    <source src="vídeo final.mp4" type="video/mp4">
                 </video>
 
                 <!-- Custom Play Button Overlay -->
@@ -576,6 +575,30 @@
                 gsap.to(playBtn, { opacity: 1, scale: 1, pointerEvents: 'all' });
                 video.controls = false;
             });
+        }
+
+        // FORCE HERO VIDEO AUTOPLAY
+        // Browser policy blocks autoplay unless muted. This script forces it.
+        const heroVideo = document.getElementById('heroVideo');
+        if (heroVideo) {
+            heroVideo.muted = true; // Ensure it is muted for browser policy
+            
+            const playPromise = heroVideo.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Autoplay started!
+                    console.log("Hero video playing");
+                })
+                .catch(error => {
+                    // Auto-play was prevented
+                    console.log("Autoplay prevented, retrying on interaction");
+                    // Fallback: Play on first click anywhere
+                    document.body.addEventListener('click', () => {
+                        heroVideo.play();
+                    }, { once: true });
+                });
+            }
         }
 
     </script>
