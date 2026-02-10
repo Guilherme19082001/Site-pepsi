@@ -100,8 +100,8 @@
     <!-- Preloader -->
     <div id="preloader">
         <div class="relative flex items-center justify-center">
-            <!-- LOGO CORRETA COM PULSAÇÃO (PT-Logo-Novo2_0.png) -->
-            <img src="PT-Logo-Novo2_0.png" 
+            <!-- LOGO CORRETA COM PULSAÇÃO (Atualizada para PT-Logo-New2_0.png) -->
+            <img src="PT-Logo-New2_0.png" 
                  onerror="this.style.display='none'; document.getElementById('preloader-fallback').style.display='block';"
                  alt="Pepsi Loading" 
                  class="w-32 md:w-48 object-contain animate-logo-pulse relative z-10">
@@ -120,8 +120,8 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
         <div class="logo-container cursor-pointer group">
-            <!-- LOGO DO MENU CORRETA COM PULSAÇÃO (PT-Logo-Novo2_0.png) -->
-            <img src="PT-Logo-Novo2_0.png" 
+            <!-- LOGO DO MENU CORRETA COM PULSAÇÃO (Atualizada para PT-Logo-New2_0.png) -->
+            <img src="PT-Logo-New2_0.png" 
                  onerror="this.style.display='none'; document.getElementById('nav-fallback').style.display='block';"
                  alt="Pepsi Logo" 
                  class="h-16 w-auto animate-logo-pulse transition-all hover:scale-110">
@@ -201,7 +201,7 @@
 
         <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-20">
             <div class="w-full md:w-1/2 space-y-12">
-                <!-- TEXTO CORRIGIDO: Padding extra, leading-snug e tamanho reduzido para evitar corte -->
+                <!-- TEXTO CORRIGIDO -->
                 <div class="overflow-hidden py-4">
                     <h2 class="story-title text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter leading-snug transform translate-y-full pb-4">
                         Mais que <br> <span class="text-blue-600">Refrigerante.</span>
@@ -240,16 +240,17 @@
                 </h2>
             </div>
 
-            <!-- FOTO DO URSO CORRETA (Image_fx (8).png com espaço codificado) -->
+            <!-- FOTO DO URSO CORRETA (image_a195aa.jpg) -->
             <div class="relative w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl bg-gray-100 group">
-                <img src="Image_fx%20(8).png" 
+                <img src="image_a195aa.jpg" 
                      class="w-full h-auto block transform scale-100 transition-transform duration-[2s] hover:scale-105"
                      onerror="this.src='https://images.unsplash.com/photo-1589656966895-2f33e7653819?q=80&w=2070'"
                      alt="Urso Polar na Mesa">
                 
-                <!-- Lata Pepsi (Subindo para a mesa) -->
-                <!-- Posicionada inicialmente em baixo, vai subir até 50% (em cima da mesa) -->
-                <div class="absolute bottom-[-20%] right-[30%] w-16 md:w-24 z-20" id="bear-pepsi">
+                <!-- Lata Pepsi (Subindo para a mesa, LADO ESQUERDO) -->
+                <!-- Mudado para 'left-[22%]' para alinhar com a mesa do urso -->
+                <!-- Bottom -20% (escondida) sobe para 42% (em cima da mesa) -->
+                <div class="absolute bottom-[-20%] left-[22%] w-16 md:w-24 z-20" id="bear-pepsi">
                     <img src="PEP-REGULAR-SLEEK-CG.png" 
                          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Pepsi_Can_2023.png/440px-Pepsi_Can_2023.png'"
                          class="w-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" 
@@ -440,18 +441,23 @@
                    .to(".story-line", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=1")
                    .to(".story-visual", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=1");
 
-            // BEAR ANIMATION (Lata Subindo CORRIGIDA)
+            // BEAR ANIMATION (Lata Subindo - CORRIGIDA E REPETITIVA)
             const bearTl = gsap.timeline({
-                scrollTrigger: { trigger: "#bear-section", start: "top 60%" }
+                scrollTrigger: { 
+                    trigger: "#bear-section", 
+                    start: "top 70%",
+                    end: "bottom 20%",
+                    toggleActions: "restart none none reset" // REINICIA ao entrar e RESETA ao sair
+                }
             });
 
             bearTl.to(".bear-title", { y: 0, duration: 0.8, ease: "power3.out" })
                   .to("#bear-pepsi", { 
-                      // Move a lata de bottom -20% para 50% (bem em cima da mesa)
-                      bottom: "50%", 
+                      // Move a lata de bottom -20% para 42% (posição da mesa no lado esquerdo)
+                      bottom: "42%", 
                       opacity: 1,
-                      duration: 1.8, 
-                      ease: "power3.out" 
+                      duration: 1.5, 
+                      ease: "power2.out" 
                   }, "-=0.4")
                   .to("#bear-text", { opacity: 1, duration: 1 }, "-=1");
         }
