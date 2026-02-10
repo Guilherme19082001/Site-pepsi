@@ -201,9 +201,9 @@
 
         <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-20">
             <div class="w-full md:w-1/2 space-y-12">
-                <!-- TEXTO CORRIGIDO: Padding extra e leading-normal para evitar corte -->
+                <!-- TEXTO CORRIGIDO: Padding extra, leading-snug e tamanho reduzido para evitar corte -->
                 <div class="overflow-hidden py-4">
-                    <h2 class="story-title text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter leading-normal transform translate-y-full pb-2">
+                    <h2 class="story-title text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter leading-snug transform translate-y-full pb-4">
                         Mais que <br> <span class="text-blue-600">Refrigerante.</span>
                     </h2>
                 </div>
@@ -240,15 +240,15 @@
                 </h2>
             </div>
 
-            <!-- FOTO DO URSO CORRETA (image_a195aa.jpg) -->
+            <!-- FOTO DO URSO CORRETA (Image_fx (8).png com espaço codificado) -->
             <div class="relative w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl bg-gray-100 group">
-                <img src="image_a195aa.jpg" 
+                <img src="Image_fx%20(8).png" 
                      class="w-full h-auto block transform scale-100 transition-transform duration-[2s] hover:scale-105"
                      onerror="this.src='https://images.unsplash.com/photo-1589656966895-2f33e7653819?q=80&w=2070'"
                      alt="Urso Polar na Mesa">
                 
                 <!-- Lata Pepsi (Subindo para a mesa) -->
-                <!-- Posicionada inicialmente em baixo, vai subir até 45% (em cima da mesa) -->
+                <!-- Posicionada inicialmente em baixo, vai subir até 50% (em cima da mesa) -->
                 <div class="absolute bottom-[-20%] right-[30%] w-16 md:w-24 z-20" id="bear-pepsi">
                     <img src="PEP-REGULAR-SLEEK-CG.png" 
                          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Pepsi_Can_2023.png/440px-Pepsi_Can_2023.png'"
@@ -447,8 +447,8 @@
 
             bearTl.to(".bear-title", { y: 0, duration: 0.8, ease: "power3.out" })
                   .to("#bear-pepsi", { 
-                      // Move a lata de bottom -20% para 45% (acima da mesa)
-                      bottom: "45%", 
+                      // Move a lata de bottom -20% para 50% (bem em cima da mesa)
+                      bottom: "50%", 
                       opacity: 1,
                       duration: 1.8, 
                       ease: "power3.out" 
