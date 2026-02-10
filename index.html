@@ -188,7 +188,7 @@
         <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-20">
             <div class="w-full md:w-1/2 space-y-12">
                 <div class="overflow-hidden">
-                    <h2 class="story-title text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none transform translate-y-full">
+                    <h2 class="story-title text-4xl md:text-6xl font-black uppercase tracking-tight leading-tight transform translate-y-full">
                         Mais que <br> <span class="text-blue-600">Refrigerante.</span>
                     </h2>
                 </div>
@@ -233,7 +233,7 @@
                      onerror="this.src='https://images.unsplash.com/photo-1589656966895-2f33e7653819?q=80&w=2070'"
                      alt="Urso Polar na Mesa">
                 
-                <!-- Lata Pepsi (Rolando) -->
+                <!-- Lata Pepsi (Rolando) - ANIMAÇÃO CORRIGIDA -->
                 <div class="absolute bottom-[5%] right-0 translate-x-[200%] w-24 md:w-40" id="bear-pepsi">
                     <img src="PEP-REGULAR-SLEEK-CG.png" 
                          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Pepsi_Can_2023.png/440px-Pepsi_Can_2023.png'"
@@ -318,7 +318,7 @@
 
             </div>
 
-            <!-- Zero Caff Banner -->
+            <!-- Zero Caff Banner - IMAGEM DA GARRAFA CORRIGIDA -->
             <div class="mt-24 relative rounded-3xl overflow-hidden group">
                 <div class="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-transparent z-10"></div>
                 <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1629203851288-7ececb669e4f?q=80&w=2070')] bg-cover bg-center opacity-30"></div>
@@ -334,9 +334,9 @@
                     </div>
                     
                     <div class="flex-1 flex justify-center relative h-[400px] w-full">
-                        <!-- GARRAFA ZERO CAFF -->
+                        <!-- GARRAFA ZERO CAFF - CORRIGIDO COM MÚLTIPLAS FONTES -->
                         <img src="garrafa-zero-caff.png" 
-                             onerror="this.src='https://www.pepsi.com/images/default-source/products-brands/pepsi-zero-sugar_20oz.png'"
+                             onerror="this.onerror=null; this.src='garrafa%20zero%20caff.png'"
                              alt="Garrafa Zero Cafeína" 
                              class="h-full w-auto object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] transform group-hover:rotate-12 transition-transform duration-700 relative z-30 block mx-auto">
                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/10 rounded-full blur-3xl z-10"></div>
@@ -425,18 +425,22 @@
                    .to(".story-line", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=1")
                    .to(".story-visual", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=1");
 
+            // ANIMAÇÃO DO URSO CORRIGIDA - MAIS RÁPIDA E GIRANDO
             const bearTl = gsap.timeline({
-                scrollTrigger: { trigger: "#bear-section", start: "top 60%" }
+                scrollTrigger: { 
+                    trigger: "#bear-section", 
+                    start: "top 60%"
+                }
             });
 
             bearTl.to(".bear-title", { y: 0, duration: 0.8, ease: "power3.out" })
                   .to("#bear-pepsi", { 
-                      xPercent: -350, 
-                      rotation: -720, 
-                      duration: 2.5, 
+                      xPercent: -300,  // Posição ajustada
+                      rotation: -1080, // 3 voltas completas (mais visível)
+                      duration: 1.5,   // Mais rápido (era 2.5s)
                       ease: "power2.out" 
-                  }, "-=0.4")
-                  .to("#bear-text", { opacity: 1, duration: 1 }, "-=1");
+                  }, "-=0.2")  // Inicia mais cedo
+                  .to("#bear-text", { opacity: 1, duration: 1 }, "-=0.8");
         }
 
         window.addEventListener('load', initSite);
