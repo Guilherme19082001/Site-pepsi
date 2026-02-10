@@ -33,110 +33,40 @@
             background-color: var(--pepsi-black);
             color: white;
             overflow-x: hidden;
-            cursor: none;
+            cursor: default; /* Voltando ao cursor padrão para evitar confusão se o script falhar */
         }
 
         h1, h2, h3, .brand-font {
             font-family: 'Syne', sans-serif;
         }
 
-        /* Custom Cursor */
-        .cursor-dot,
-        .cursor-outline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-            background-color: white;
-        }
-
-        .cursor-outline {
-            width: 40px;
-            height: 40px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
-        }
-
-        body:hover .cursor-outline {
-            border-color: var(--pepsi-blue);
-        }
+        /* Custom Cursor (Opcional - Ativado via JS se carregar) */
+        .cursor-dot, .cursor-outline { pointer-events: none; display: none; }
+        body.custom-cursor .cursor-dot, body.custom-cursor .cursor-outline { display: block; position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; }
+        .cursor-dot { width: 8px; height: 8px; background-color: white; }
+        .cursor-outline { width: 40px; height: 40px; border: 2px solid rgba(255, 255, 255, 0.5); transition: width 0.2s, height 0.2s, background-color 0.2s; }
 
         /* Grain Overlay */
         .grain-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9000;
-            opacity: 0.05;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9000; opacity: 0.05;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
         /* Utilities */
-        .btn-glow {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
-        }
-        .btn-glow:hover::before {
-            left: 100%;
-        }
+        .btn-glow { position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .btn-glow::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: 0.5s; }
+        .btn-glow:hover::before { left: 100%; }
 
-        .product-card {
-            perspective: 1000px;
-            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .product-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .product-card:hover .product-inner {
-            transform: translateY(-10px) scale(1.02);
-        }
-        .can-shadow {
-            filter: drop-shadow(0px 20px 30px rgba(0, 92, 180, 0.4));
-            transition: filter 0.5s ease;
-        }
-        .product-card:hover .can-shadow {
-            filter: drop-shadow(0px 30px 50px rgba(0, 255, 255, 0.6));
-        }
+        .product-card { perspective: 1000px; transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
+        .product-inner { transition: transform 0.6s; transform-style: preserve-3d; }
+        .product-card:hover .product-inner { transform: translateY(-10px) scale(1.02); }
+        .can-shadow { filter: drop-shadow(0px 20px 30px rgba(0, 92, 180, 0.4)); transition: filter 0.5s ease; }
+        .product-card:hover .can-shadow { filter: drop-shadow(0px 30px 50px rgba(0, 255, 255, 0.6)); }
 
         /* Marquee */
         .marquee-container { overflow: hidden; white-space: nowrap; }
         .marquee-content { display: inline-block; animation: marquee 20s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        /* Storytelling Section */
-        .story-text {
-            -webkit-text-stroke: 1px rgba(255,255,255,0.2);
-            color: transparent;
-            transition: color 0.5s;
-        }
-        .story-text.active {
-            color: white;
-            -webkit-text-stroke: 0px;
-            text-shadow: 0 0 30px rgba(0,92,180,0.8);
-        }
 
         /* Preloader */
         #preloader {
@@ -150,7 +80,7 @@
         nav { backdrop-filter: blur(10px); background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
-<body class="antialiased selection:bg-blue-600 selection:text-white">
+<body class="antialiased selection:bg-blue-600 selection:text-white custom-cursor">
 
     <!-- Cursor -->
     <div class="cursor-dot"></div>
@@ -158,8 +88,8 @@
 
     <!-- Preloader -->
     <div id="preloader">
-        <!-- Logo Oficial no Carregamento -->
         <img src="PT-Logo-Novo2_0.png" 
+             onerror="this.src='https://logos-world.net/wp-content/uploads/2020/04/Pepsi-Logo.png'" 
              alt="Pepsi Loading" 
              class="loader-logo object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
     </div>
@@ -169,8 +99,10 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
         <div class="logo-container cursor-pointer group">
-            <!-- NOVA LOGO ADICIONADA: PT-Logo-Novo2_0.png (Sem fallback para SVG) -->
+            <!-- LOGO COM FALLBACK AUTOMÁTICO -->
+            <!-- Se o arquivo local falhar, carrega o link externo para não ficar vazio -->
             <img src="PT-Logo-Novo2_0.png" 
+                 onerror="this.src='https://logos-world.net/wp-content/uploads/2020/04/Pepsi-Logo.png'"
                  alt="Pepsi Logo" 
                  class="h-16 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] transition-all hover:scale-110">
         </div>
@@ -192,9 +124,11 @@
         <div class="absolute inset-0 w-full h-full z-0 bg-black">
             <div class="absolute inset-0 bg-black/40 z-10"></div>
             
+            <!-- VÍDEO COM MÚLTIPLAS TENTATIVAS DE NOME -->
             <video id="heroVideo" autoplay loop muted playsinline webkit-playsinline class="w-full h-full object-cover opacity-80" poster="https://images.unsplash.com/photo-1629203851122-3726ec685227?q=80&w=2070">
-                <source src="vídeo%20inicial.mp4" type="video/mp4">
                 <source src="vídeo inicial.mp4" type="video/mp4">
+                <source src="vídeo%20inicial.mp4" type="video/mp4"> <!-- URL Encoded -->
+                <source src="video inicial.mp4" type="video/mp4"> <!-- Sem acento -->
             </video>
         </div>
 
@@ -229,16 +163,14 @@
         </div>
     </div>
 
-    <!-- NOVA SECÇÃO DE STORYTELLING (Manifesto) -->
+    <!-- Storytelling Section -->
     <section class="py-32 bg-black relative overflow-hidden border-b border-white/5">
-        <!-- Fundo animado abstrato -->
         <div class="absolute inset-0 z-0">
              <div class="absolute top-1/2 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] animate-pulse"></div>
              <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-red-600/10 rounded-full blur-[120px]"></div>
         </div>
 
         <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-20">
-            
             <div class="w-full md:w-1/2 space-y-12">
                 <div class="overflow-hidden">
                     <h2 class="story-title text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none transform translate-y-full">
@@ -254,7 +186,6 @@
             </div>
 
             <div class="w-full md:w-1/2 relative h-[500px] flex items-center justify-center story-visual opacity-0 scale-90">
-                <!-- Efeito Visual de Camadas -->
                 <div class="absolute inset-0 border border-white/10 rounded-full animate-[spin_10s_linear_infinite]"></div>
                 <div class="absolute inset-4 border border-blue-500/20 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
                 <div class="absolute inset-0 flex flex-col justify-center items-center text-center">
@@ -266,11 +197,10 @@
                      </div>
                 </div>
             </div>
-
         </div>
     </section>
 
-    <!-- SECÇÃO O "URSO" (NOVA ADIÇÃO) -->
+    <!-- SECÇÃO O "URSO" -->
     <section class="py-24 bg-white text-black relative overflow-hidden" id="bear-section">
         <div class="container mx-auto px-6 relative z-10 flex flex-col items-center">
             
@@ -281,15 +211,17 @@
             </div>
 
             <div class="relative w-full max-w-5xl aspect-[16/9] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl bg-gray-100 group">
-                <!-- Imagem do Urso Polar (ATUALIZADA) -->
+                <!-- Imagem do Urso Polar -->
                 <img src="Image_fx (8).png" 
                      class="w-full h-full object-cover transform scale-105 transition-transform duration-[2s] hover:scale-100"
+                     onerror="this.src='https://images.unsplash.com/photo-1589656966895-2f33e7653819?q=80&w=2070'"
                      alt="Urso Polar na Mesa">
                 
                 <!-- Lata Pepsi (Rolando) -->
-                <!-- Posicionada inicialmente fora do ecrã à direita -->
-                <div class="absolute bottom-[5%] -right-[30%] w-24 md:w-40" id="bear-pepsi">
+                <!-- A lata começa totalmente à direita (translate-x) -->
+                <div class="absolute bottom-[5%] right-0 translate-x-[200%] w-24 md:w-40" id="bear-pepsi">
                     <img src="PEP-REGULAR-SLEEK-CG.png" 
+                         onerror="this.src='https://pngimg.com/d/pepsi_PNG22.png'"
                          class="w-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" 
                          alt="Lata Pepsi">
                 </div>
@@ -314,7 +246,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
                 
-                <!-- Product 1: Zero Sugar -->
+                <!-- Product 1 -->
                 <div class="product-card group relative">
                     <div class="absolute inset-0 bg-blue-600/5 rounded-3xl transform rotate-3 transition-transform group-hover:rotate-6"></div>
                     <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-10 text-center relative z-10 product-inner h-full flex flex-col justify-between">
@@ -332,7 +264,7 @@
                     </div>
                 </div>
 
-                <!-- Product 2: Zero Sugar Lime -->
+                <!-- Product 2 -->
                 <div class="product-card group relative md:-mt-12">
                     <div class="absolute inset-0 bg-green-500/10 rounded-3xl transform -rotate-2 transition-transform group-hover:-rotate-3"></div>
                     <div class="bg-gradient-to-b from-gray-900 to-black border border-green-500/30 rounded-3xl p-10 text-center relative z-10 product-inner shadow-[0_0_50px_rgba(0,255,0,0.1)] h-full flex flex-col justify-between">
@@ -351,7 +283,7 @@
                     </div>
                 </div>
 
-                <!-- Product 3: Regular Blue -->
+                <!-- Product 3 -->
                 <div class="product-card group relative">
                     <div class="absolute inset-0 bg-blue-600/5 rounded-3xl transform rotate-1 transition-transform group-hover:rotate-2"></div>
                     <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-10 text-center relative z-10 product-inner h-full flex flex-col justify-between">
@@ -371,7 +303,7 @@
 
             </div>
 
-            <!-- ZERO CAFEÍNA BANNER (IMAGEM CORRIGIDA) -->
+            <!-- Zero Banner -->
             <div class="mt-24 relative rounded-3xl overflow-hidden group">
                 <div class="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-transparent z-10"></div>
                 <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1629203851288-7ececb669e4f?q=80&w=2070')] bg-cover bg-center opacity-30"></div>
@@ -388,6 +320,7 @@
                     
                     <div class="flex-1 flex justify-center relative h-[400px] w-full">
                         <img src="garrafa-zero-caff.png" 
+                             onerror="this.src='https://pngimg.com/d/pepsi_PNG22.png'; this.style.filter='grayscale(100%) brightness(0.8)'"
                              alt="Garrafa Zero Cafeína" 
                              class="h-full w-auto object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] transform group-hover:rotate-12 transition-transform duration-700 relative z-30 block mx-auto">
                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/10 rounded-full blur-3xl z-10"></div>
@@ -406,6 +339,7 @@
                 <video id="mainVideo" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" poster="https://wallpaperaccess.com/full/1330836.jpg">
                     <source src="vídeo%20final.mp4" type="video/mp4">
                     <source src="vídeo final.mp4" type="video/mp4">
+                    <source src="video final.mp4" type="video/mp4">
                 </video>
 
                 <div id="playBtn" class="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer group-hover:bg-black/20 transition-all">
@@ -428,106 +362,128 @@
     </footer>
 
     <script>
-        // Custom Cursor
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorOutline = document.querySelector('.cursor-outline');
-        window.addEventListener('mousemove', (e) => {
-            cursorDot.style.left = `${e.clientX}px`;
-            cursorDot.style.top = `${e.clientY}px`;
-            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
-        });
+        // SEGURANÇA TOTAL DE SCRIPTS
+        // Espera a página carregar completamente antes de rodar animações
+        window.addEventListener('load', () => {
+            console.log("Site carregado. Iniciando animações...");
 
-        // Preloader
-        document.addEventListener("DOMContentLoaded", () => {
-            setTimeout(() => {
-                const tl = gsap.timeline();
-                tl.to(".loader-logo", { duration: 0.5, scale: 0, opacity: 0 })
-                  .to("#preloader", { duration: 0.8, y: "-100%", ease: "power4.inOut" })
-                  .to(".hero-content", { y: 0, opacity: 1, duration: 1 }, "-=0.4");
-            }, 1000);
-        });
+            // 1. Remover Preloader
+            const removePreloader = () => {
+                const preloader = document.getElementById('preloader');
+                if(preloader) {
+                    gsap.to(preloader, { 
+                        y: "-100%", 
+                        duration: 0.8, 
+                        ease: "power4.inOut",
+                        onComplete: () => {
+                            // Ativar cursor personalizado só depois do load
+                            document.body.classList.add('custom-cursor');
+                            initAnimations();
+                        }
+                    });
+                    
+                    // Animação inicial do Hero
+                    gsap.to(".hero-content", { y: 0, opacity: 1, duration: 1, delay: 0.5 });
+                }
+            };
 
-        // Scroll Animations
-        gsap.registerPlugin(ScrollTrigger);
-        
-        // Products Reveal
-        gsap.utils.toArray('.product-card').forEach((card, i) => {
-            gsap.from(card, {
-                scrollTrigger: { trigger: card, start: "top 85%" },
-                y: 100, opacity: 0, duration: 1, delay: i * 0.2
-            });
-        });
+            // Remove preloader após 1 segundo (garantia)
+            setTimeout(removePreloader, 1000);
 
-        // STORYTELLING ANIMATIONS
-        const storyTl = gsap.timeline({
-            scrollTrigger: {
-                trigger: ".story-title",
-                start: "top 80%",
-            }
-        });
-        storyTl.to(".story-title", { y: 0, duration: 1, ease: "power4.out" })
-               .to(".story-p", { y: 0, opacity: 1, stagger: 0.2, duration: 0.8 }, "-=0.5")
-               .to(".story-line", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=1")
-               .to(".story-visual", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=1");
-
-        // BEAR ANIMATION (ATUALIZADA PARA ROLAGEM)
-        const bearTl = gsap.timeline({
-            scrollTrigger: {
-                trigger: "#bear-section",
-                start: "top 60%", // Começa quando a secção está visível
-            }
-        });
-
-        bearTl.to(".bear-title", { y: 0, duration: 0.8, ease: "power3.out" })
-              // Animação da Lata Rolando: Move para a esquerda (x) e Roda (rotation)
-              .fromTo("#bear-pepsi", 
-                  { x: 0, rotation: 0 }, 
-                  { 
-                      right: "35%",       // Pára mais ou menos no meio da mesa (ajustável)
-                      rotation: -720,     // Roda 2 vezes completas (negativo para rolar para a esquerda)
-                      duration: 2.5, 
-                      ease: "power2.out"  // Desacelera no fim como uma lata real
-                  }, 
-                  "-=0.4"
-              )
-              .to("#bear-text", { opacity: 1, duration: 1 }, "-=1");
-
-
-        // Video Player Logic
-        const video = document.getElementById('mainVideo');
-        const playBtn = document.getElementById('playBtn');
-        if (playBtn && video) {
-            playBtn.addEventListener('click', () => {
-                video.play();
-                gsap.to(playBtn, { opacity: 0, scale: 1.5, pointerEvents: 'none' });
-                video.style.opacity = '1';
-                video.controls = true;
-            });
-        }
-
-        // FORCE HERO AUTOPLAY
-        const heroVideo = document.getElementById('heroVideo');
-        const forceBtn = document.getElementById('forcePlayBtn');
-        
-        if (heroVideo) {
-            heroVideo.muted = true; 
-            let playAttempt = setInterval(() => {
-                heroVideo.play().then(() => {
-                    clearInterval(playAttempt);
-                    console.log("Video playing successfully");
-                    forceBtn.classList.add('hidden');
-                }).catch(e => {
-                    console.log("Autoplay blocked, showing button");
-                    forceBtn.classList.remove('hidden');
+            // 2. Cursor Personalizado
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+            
+            if(cursorDot && cursorOutline) {
+                window.addEventListener('mousemove', (e) => {
+                    cursorDot.style.left = `${e.clientX}px`;
+                    cursorDot.style.top = `${e.clientY}px`;
+                    
+                    // Animação suavizada para o outline
+                    cursorOutline.animate({ 
+                        left: `${e.clientX}px`, 
+                        top: `${e.clientY}px` 
+                    }, { duration: 500, fill: "forwards" });
                 });
-            }, 1000); 
+            }
 
-            forceBtn.addEventListener('click', () => {
-                heroVideo.play();
-                heroVideo.muted = false; 
-                forceBtn.classList.add('hidden');
-            });
-        }
+            // 3. Inicializar Animações GSAP
+            function initAnimations() {
+                if(typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+                    console.error("GSAP não carregou. Verifique sua conexão.");
+                    return;
+                }
+                
+                gsap.registerPlugin(ScrollTrigger);
+                
+                // Products Reveal
+                gsap.utils.toArray('.product-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: { trigger: card, start: "top 85%" },
+                        y: 100, opacity: 0, duration: 1, delay: i * 0.2
+                    });
+                });
+
+                // Storytelling
+                gsap.timeline({
+                    scrollTrigger: { trigger: ".story-title", start: "top 80%" }
+                })
+                .to(".story-title", { y: 0, duration: 1, ease: "power4.out" })
+                .to(".story-p", { y: 0, opacity: 1, stagger: 0.2, duration: 0.8 }, "-=0.5")
+                .to(".story-line", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=1")
+                .to(".story-visual", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=1");
+
+                // BEAR ANIMATION (Lata Rolando)
+                // Usando xPercent para mover da direita para a esquerda de forma responsiva
+                const bearTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: "#bear-section",
+                        start: "top 60%",
+                    }
+                });
+
+                bearTl.to(".bear-title", { y: 0, duration: 0.8, ease: "power3.out" })
+                      .to("#bear-pepsi", { 
+                          xPercent: -350, // Move 350% para a esquerda (entra na tela)
+                          rotation: -720, // Roda 2 voltas
+                          duration: 2.5, 
+                          ease: "power2.out" 
+                      }, "-=0.4")
+                      .to("#bear-text", { opacity: 1, duration: 1 }, "-=1");
+            }
+
+            // 4. Video Play Logic (Manual & Auto Force)
+            const mainVideo = document.getElementById('mainVideo');
+            const playBtn = document.getElementById('playBtn');
+            
+            if (playBtn && mainVideo) {
+                playBtn.addEventListener('click', () => {
+                    mainVideo.play();
+                    gsap.to(playBtn, { opacity: 0, scale: 1.5, pointerEvents: 'none' });
+                    mainVideo.style.opacity = '1';
+                    mainVideo.controls = true;
+                });
+            }
+
+            // Tenta forçar o autoplay do Hero Video
+            const heroVideo = document.getElementById('heroVideo');
+            const forceBtn = document.getElementById('forcePlayBtn');
+            
+            if (heroVideo) {
+                heroVideo.muted = true; // Obrigatório
+                heroVideo.play().catch(() => {
+                    // Se falhar, mostra botão de play discreto
+                    if(forceBtn) forceBtn.classList.remove('hidden');
+                });
+                
+                if(forceBtn) {
+                    forceBtn.addEventListener('click', () => {
+                        heroVideo.play();
+                        forceBtn.classList.add('hidden');
+                    });
+                }
+            }
+        });
     </script>
 </body>
 </html>
