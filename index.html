@@ -111,14 +111,16 @@
         .marquee-content { display: inline-block; animation: marquee 20s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* LOGO PULSE ANIMATION */
-        @keyframes logo-pulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(255,255,255,0.6)); }
-            50% { transform: scale(1.08); filter: drop-shadow(0 0 30px rgba(0, 92, 180, 0.9)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(255,255,255,0.6)); }
+        /* COMPLEX LOGO MOTION (Float + Pulse) */
+        @keyframes float-motion {
+            0% { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); }
+            25% { transform: translate(5px, -5px) scale(1.05); }
+            50% { transform: translate(0, -10px) scale(1.1); filter: drop-shadow(0 0 25px rgba(0, 92, 180, 0.8)); }
+            75% { transform: translate(-5px, -5px) scale(1.05); }
+            100% { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); }
         }
-        .animate-logo-pulse {
-            animation: logo-pulse 3s infinite ease-in-out;
+        .animate-logo-float {
+            animation: float-motion 6s infinite ease-in-out;
         }
 
         /* Preloader */
@@ -136,7 +138,7 @@
 </head>
 <body class="antialiased selection:bg-blue-600 selection:text-white custom-cursor">
 
-    <!-- Bubbles Background (NOVO) -->
+    <!-- Bubbles Background -->
     <div id="bubbles-container"></div>
 
     <!-- Cursor Elements -->
@@ -146,14 +148,14 @@
     <!-- Preloader -->
     <div id="preloader">
         <div class="relative flex items-center justify-center">
-            <!-- LOGO CORRETA COM PULSAÇÃO (PT-Logo-New2_0.png) -->
+            <!-- LOGO: PT-Logo-New2_0.png -->
             <img src="PT-Logo-New2_0.png" 
                  onerror="this.style.display='none'; document.getElementById('preloader-fallback').style.display='block';"
                  alt="Pepsi Loading" 
-                 class="w-32 md:w-48 object-contain animate-logo-pulse relative z-10">
+                 class="w-32 md:w-48 object-contain animate-logo-float relative z-10">
             
             <!-- Fallback SVG -->
-            <svg id="preloader-fallback" style="display:none;" class="w-32 md:w-48 animate-logo-pulse" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <svg id="preloader-fallback" style="display:none;" class="w-32 md:w-48 animate-logo-float" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="60" cy="60" r="58" fill="white"/>
                 <path d="M60 10C32.3857 10 10 32.3857 10 60C10 87.6142 32.3857 110 60 110C87.6142 110 110 87.6142 110 60C110 32.3857 87.6142 10 60 10ZM60 105.833C34.6867 105.833 14.1667 85.3133 14.1667 60C14.1667 34.6867 34.6867 14.1667 60 14.1667C85.3133 14.1667 105.833 34.6867 105.833 60C105.833 85.3133 85.3133 105.833 60 105.833Z" fill="#005CB4"/>
                 <path d="M101.25 60C101.25 75.625 92.5 89.1667 79.1667 96.25C79.1667 96.25 95 65 60 65C25 65 40.8333 96.25 40.8333 96.25C27.5 89.1667 18.75 75.625 18.75 60C18.75 44.375 27.5 30.8333 40.8333 23.75C40.8333 23.75 25 55 60 55C95 55 79.1667 23.75 79.1667 23.75C92.5 30.8333 101.25 44.375 101.25 60Z" fill="#C9002B"/>
@@ -166,14 +168,14 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
         <div class="logo-container cursor-pointer group">
-            <!-- LOGO DO MENU -->
+            <!-- LOGO DO MENU COM MOVIMENTO FLUTUANTE -->
             <img src="PT-Logo-New2_0.png" 
                  onerror="this.style.display='none'; document.getElementById('nav-fallback').style.display='block';"
                  alt="Pepsi Logo" 
-                 class="h-16 w-auto animate-logo-pulse transition-all hover:scale-110">
+                 class="h-16 w-auto animate-logo-float transition-all hover:scale-110">
             
             <!-- Fallback SVG -->
-            <svg id="nav-fallback" style="display:none;" class="h-12 w-auto animate-logo-pulse filter drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" viewBox="0 0 500 150" xmlns="http://www.w3.org/2000/svg">
+            <svg id="nav-fallback" style="display:none;" class="h-12 w-auto animate-logo-float filter drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" viewBox="0 0 500 150" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="25" cy="75" r="24" fill="white" stroke="#005CB4" stroke-width="2"/>
                 <path d="M25 55C15 55 10 65 10 75C10 85 15 95 25 95C35 95 40 85 40 75C40 65 35 55 25 55" fill="#C9002B"/>
                 <path d="M25 55C35 55 40 65 40 75C40 85 35 95 25 95C15 95 10 85 10 75C10 65 15 55 25 55" fill="#005CB4" opacity="0.5"/>
@@ -293,7 +295,8 @@
                      onerror="this.src='https://images.unsplash.com/photo-1589656966895-2f33e7653819?q=80&w=2070'"
                      alt="Urso Polar na Mesa">
                 
-                <!-- Lata Pepsi (Subindo para a mesa, LADO ESQUERDO) -->
+                <!-- Lata Pepsi (Subindo para a mesa, LADO ESQUERDO, LENTO) -->
+                <!-- Bottom -20% (escondida) sobe para 42% (em cima da mesa) -->
                 <div class="absolute bottom-[-20%] left-[22%] w-16 md:w-24 z-20" id="bear-pepsi">
                     <img src="PEP-REGULAR-SLEEK-CG.png" 
                          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Pepsi_Can_2023.png/440px-Pepsi_Can_2023.png'"
@@ -544,7 +547,7 @@
                    .to(".story-line", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=1")
                    .to(".story-visual", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=1");
 
-            // BEAR ANIMATION (Lata Subindo - CORRIGIDA E REPETITIVA)
+            // BEAR ANIMATION (Lata Subindo - CORRIGIDA LENTA e ATRASADA)
             const bearTl = gsap.timeline({
                 scrollTrigger: { 
                     trigger: "#bear-section", 
@@ -559,10 +562,10 @@
                       // Move a lata de bottom -20% para 42% (posição da mesa no lado esquerdo)
                       bottom: "42%", 
                       opacity: 1,
-                      duration: 1.5, 
-                      ease: "power2.out" 
-                  }, "-=0.4")
-                  .to("#bear-text", { opacity: 1, duration: 1 }, "-=1");
+                      duration: 4, // Duração de 4 segundos (muito lento)
+                      ease: "power1.inOut" // Movimento suave e constante
+                  }, "+=0.5") // Atraso de 0.5 segundos antes de começar
+                  .to("#bear-text", { opacity: 1, duration: 1 }, "-=2"); // Texto aparece enquanto a lata ainda está a subir
         }
 
         window.addEventListener('load', initSite);
