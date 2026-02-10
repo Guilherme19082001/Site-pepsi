@@ -119,8 +119,10 @@
             75% { transform: translate(-5px, -5px) scale(1.05); }
             100% { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); }
         }
+        
+        /* Aumentei a velocidade: de 6s para 3s para ser "mais rápido" */
         .animate-logo-float {
-            animation: float-motion 6s infinite ease-in-out;
+            animation: float-motion 3s infinite ease-in-out;
         }
 
         /* Preloader */
@@ -168,7 +170,7 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
         <div class="logo-container cursor-pointer group">
-            <!-- LOGO DO MENU COM MOVIMENTO FLUTUANTE -->
+            <!-- LOGO DO MENU COM MOVIMENTO FLUTUANTE ACELERADO -->
             <img src="PT-Logo-New2_0.png" 
                  onerror="this.style.display='none'; document.getElementById('nav-fallback').style.display='block';"
                  alt="Pepsi Logo" 
