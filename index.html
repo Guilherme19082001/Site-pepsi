@@ -13,9 +13,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     
-    <!-- GSAP for Animations -->
+    <!-- GSAP & Lenis for High-End Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,6 +51,48 @@
         .grain-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9000; opacity: 0.05;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Bubbles Container */
+        #bubbles-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .bubble {
+            position: absolute; bottom: -20px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;
+            pointer-events: none; animation: rise linear infinite;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-120vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Glitch Effect on Title */
+        .glitch { position: relative; }
+        .glitch::before, .glitch::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .glitch::before {
+            left: 2px; text-shadow: -1px 0 #00ffff; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px; text-shadow: -1px 0 #ff00ff; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(14px, 9999px, 127px, 0); }
+            20% { clip: rect(95px, 9999px, 15px, 0); }
+            40% { clip: rect(20px, 9999px, 89px, 0); }
+            60% { clip: rect(6px, 9999px, 67px, 0); }
+            80% { clip: rect(54px, 9999px, 29px, 0); }
+            100% { clip: rect(32px, 9999px, 98px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(129px, 9999px, 36px, 0); }
+            20% { clip: rect(3px, 9999px, 4px, 0); }
+            40% { clip: rect(55px, 9999px, 12px, 0); }
+            60% { clip: rect(83px, 9999px, 122px, 0); }
+            80% { clip: rect(28px, 9999px, 137px, 0); }
+            100% { clip: rect(4px, 9999px, 86px, 0); }
         }
 
         /* Utilities */
@@ -93,6 +136,9 @@
 </head>
 <body class="antialiased selection:bg-blue-600 selection:text-white custom-cursor">
 
+    <!-- Bubbles Background (NOVO) -->
+    <div id="bubbles-container"></div>
+
     <!-- Cursor Elements -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
@@ -120,7 +166,7 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
         <div class="logo-container cursor-pointer group">
-            <!-- LOGO DO MENU CORRETA COM PULSAÇÃO (PT-Logo-New2_0.png) -->
+            <!-- LOGO DO MENU -->
             <img src="PT-Logo-New2_0.png" 
                  onerror="this.style.display='none'; document.getElementById('nav-fallback').style.display='block';"
                  alt="Pepsi Logo" 
@@ -162,7 +208,8 @@
 
         <div class="relative z-20 text-center px-4 hero-content opacity-0 translate-y-10">
             <h2 class="text-blue-400 font-bold tracking-[0.5em] mb-4 text-sm uppercase animate-fade-in-up">Nova Geração</h2>
-            <h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-6 mix-blend-screen">
+            <!-- TÍTULO COM EFEITO GLITCH -->
+            <h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-6 mix-blend-screen glitch" data-text="SABOR INTENSO">
                 Sabor <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-white to-red-600">Intenso</span>
             </h1>
             <div class="flex flex-col md:flex-row gap-6 justify-center mt-10">
@@ -201,7 +248,6 @@
 
         <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-20">
             <div class="w-full md:w-1/2 space-y-12">
-                <!-- TEXTO CORRIGIDO -->
                 <div class="overflow-hidden py-4">
                     <h2 class="story-title text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter leading-snug transform translate-y-full pb-4">
                         Mais que <br> <span class="text-blue-600">Refrigerante.</span>
@@ -248,8 +294,6 @@
                      alt="Urso Polar na Mesa">
                 
                 <!-- Lata Pepsi (Subindo para a mesa, LADO ESQUERDO) -->
-                <!-- Mudado para 'left-[22%]' para alinhar com a mesa do urso -->
-                <!-- Bottom -20% (escondida) sobe para 42% (em cima da mesa) -->
                 <div class="absolute bottom-[-20%] left-[22%] w-16 md:w-24 z-20" id="bear-pepsi">
                     <img src="PEP-REGULAR-SLEEK-CG.png" 
                          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Pepsi_Can_2023.png/440px-Pepsi_Can_2023.png'"
@@ -418,7 +462,66 @@
                     preloader.style.transform = "translateY(-100%)";
                 }
             }
+            
+            // Inicializar Lenis (Scroll Suave)
+            initLenis();
+            
+            // Iniciar bolhas
+            createBubbles();
+            
+            // Iniciar animações de scroll
             initScrollAnimations();
+        }
+
+        // Sistema de Bolhas (Efervescência)
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 20; // Quantidade de bolhas
+
+            for(let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // Tamanho aleatório
+                const size = Math.random() * 15 + 5;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                // Posição horizontal aleatória
+                bubble.style.left = `${Math.random() * 100}%`;
+                
+                // Velocidade aleatória
+                bubble.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(bubble);
+            }
+        }
+
+        // Scroll Suave com Lenis
+        function initLenis() {
+            if(typeof Lenis !== 'undefined') {
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    direction: 'vertical',
+                    gestureDirection: 'vertical',
+                    smooth: true,
+                    mouseMultiplier: 1,
+                    smoothTouch: false,
+                    touchMultiplier: 2,
+                });
+
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+
+                requestAnimationFrame(raf);
+                
+                // Sincronizar ScrollTrigger com Lenis
+                gsap.registerPlugin(ScrollTrigger);
+            }
         }
 
         function initScrollAnimations() {
