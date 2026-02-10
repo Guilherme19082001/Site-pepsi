@@ -33,7 +33,7 @@
             background-color: var(--pepsi-black);
             color: white;
             overflow-x: hidden;
-            cursor: none; /* Custom cursor */
+            cursor: none;
         }
 
         h1, h2, h3, .brand-font {
@@ -69,7 +69,7 @@
             border-color: var(--pepsi-blue);
         }
 
-        /* Grain Overlay for Cinematic effect */
+        /* Grain Overlay */
         .grain-overlay {
             position: fixed;
             top: 0;
@@ -82,25 +82,7 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* Custom Utilities */
-        .text-outline {
-            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
-            color: transparent;
-            transition: all 0.5s ease;
-        }
-        .group:hover .text-outline {
-            -webkit-text-stroke: 0px;
-            color: white;
-        }
-
-        .clip-text-image {
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            background-image: linear-gradient(45deg, #005CB4, #00FFFF);
-        }
-
-        /* Magnetic Button Glow */
+        /* Utilities */
         .btn-glow {
             position: relative;
             overflow: hidden;
@@ -120,7 +102,6 @@
             left: 100%;
         }
 
-        /* Product Card 3D Effect */
         .product-card {
             perspective: 1000px;
             transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
@@ -140,114 +121,79 @@
             filter: drop-shadow(0px 30px 50px rgba(0, 255, 255, 0.6));
         }
 
-        /* Marquee Animation */
-        .marquee-container {
-            overflow: hidden;
-            white-space: nowrap;
+        /* Marquee */
+        .marquee-container { overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Storytelling Section */
+        .story-text {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+            color: transparent;
+            transition: color 0.5s;
         }
-        .marquee-content {
-            display: inline-block;
-            animation: marquee 20s linear infinite;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .story-text.active {
+            color: white;
+            -webkit-text-stroke: 0px;
+            text-shadow: 0 0 30px rgba(0,92,180,0.8);
         }
 
         /* Preloader */
         #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 10000; display: flex;
+            justify-content: center; align-items: center;
         }
-        .loader-logo {
-            width: 100px;
-            animation: pulse 1s infinite alternate;
-        }
-        @keyframes pulse {
-            from { transform: scale(1); opacity: 0.8; }
-            to { transform: scale(1.1); opacity: 1; }
-        }
-        .preloader-hidden {
-            transform: translateY(-100%);
-        }
+        .loader-logo { width: 150px; animation: pulse 1s infinite alternate; }
+        @keyframes pulse { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.1); opacity: 1; } }
 
-        /* Nav Blur */
-        nav {
-            backdrop-filter: blur(10px);
-            background: rgba(0,0,0,0.4);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        nav { backdrop-filter: blur(10px); background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="antialiased selection:bg-blue-600 selection:text-white">
 
-    <!-- Custom Cursor -->
+    <!-- Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
     <!-- Preloader -->
     <div id="preloader">
-        <!-- Substituído o SVG abstrato pelo Logo Oficial da Pepsi -->
-        <img src="https://logos-world.net/wp-content/uploads/2020/04/Pepsi-Logo.png" 
-             alt="Pepsi Logo Loading" 
-             class="loader-logo w-32 md:w-48 object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
+        <!-- Logo Oficial no Carregamento -->
+        <img src="PT-Logo-Novo2_0.png" 
+             alt="Pepsi Loading" 
+             class="loader-logo object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
     </div>
 
-    <!-- Grain Overlay -->
     <div class="grain-overlay"></div>
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
         <div class="logo-container cursor-pointer group">
-            <img src="https://logos-world.net/wp-content/uploads/2020/04/Pepsi-Logo.png" 
+            <!-- NOVA LOGO ADICIONADA: PT-Logo-Novo2_0.png (Sem fallback para SVG) -->
+            <img src="PT-Logo-Novo2_0.png" 
                  alt="Pepsi Logo" 
-                 class="h-12 w-auto filter drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] group-hover:drop-shadow-[0_0_20px_rgba(0,100,255,0.8)] transition-all">
+                 class="h-16 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] transition-all hover:scale-110">
         </div>
         
         <div class="hidden md:flex gap-10 text-sm font-bold tracking-widest uppercase">
-            <a href="#" class="hover:text-blue-400 transition-colors relative group">
-                Página Principal
-                <span class="absolute -bottom-2 left-0 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#produtos" class="hover:text-blue-400 transition-colors relative group">
-                Produtos
-                <span class="absolute -bottom-2 left-0 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#" class="hover:text-blue-400 transition-colors relative group">
-                Passatempos
-                <span class="absolute -bottom-2 left-0 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#contactos" class="hover:text-blue-400 transition-colors relative group">
-                Contactos
-                <span class="absolute -bottom-2 left-0 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full"></span>
-            </a>
+            <a href="#" class="hover:text-blue-400 transition-colors relative group">Página Principal</a>
+            <a href="#produtos" class="hover:text-blue-400 transition-colors relative group">Produtos</a>
+            <a href="#contactos" class="hover:text-blue-400 transition-colors relative group">Contactos</a>
         </div>
 
         <div class="flex gap-4 text-xl">
-            <a href="#" class="hover:text-blue-500 hover:scale-110 transition-transform"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="hover:text-blue-500 hover:scale-110 transition-transform"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="hover:text-red-500 hover:scale-110 transition-transform"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="hover:text-blue-500"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-blue-500"><i class="fab fa-facebook-f"></i></a>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <header class="relative w-full h-screen overflow-hidden flex items-center justify-center">
-        <!-- Background Video -->
         <div class="absolute inset-0 w-full h-full z-0 bg-black">
-            <div class="absolute inset-0 bg-black/40 z-10"></div> <!-- Overlay Darkener -->
+            <div class="absolute inset-0 bg-black/40 z-10"></div>
             
-            <!-- Video Fix: Added explicit error handling and playsinline for mobile -->
             <video id="heroVideo" autoplay loop muted playsinline webkit-playsinline class="w-full h-full object-cover opacity-80" poster="https://images.unsplash.com/photo-1629203851122-3726ec685227?q=80&w=2070">
-                <!-- Primary Source: Updated to user file -->
+                <source src="vídeo%20inicial.mp4" type="video/mp4">
                 <source src="vídeo inicial.mp4" type="video/mp4">
             </video>
         </div>
@@ -257,21 +203,18 @@
             <h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-6 mix-blend-screen">
                 Sabor <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-white to-red-600">Intenso</span>
             </h1>
-            <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
-                Ousadia em cada gole. Experimente a revolução do sabor com a nova linha Pepsi.
-            </p>
-            <div class="flex flex-col md:flex-row gap-6 justify-center">
+            <div class="flex flex-col md:flex-row gap-6 justify-center mt-10">
                 <button onclick="document.getElementById('produtos').scrollIntoView({behavior: 'smooth'})" 
                         class="btn-glow px-10 py-4 bg-blue-700 text-white font-bold rounded-full uppercase tracking-wider hover:bg-blue-600 border border-blue-500 shadow-[0_0_20px_rgba(0,92,180,0.5)]">
                     Descobrir Sabores
                 </button>
-                <button class="px-10 py-4 border border-white/30 backdrop-blur-sm text-white font-bold rounded-full uppercase tracking-wider hover:bg-white hover:text-black transition-all">
-                    Ver Campanha
-                </button>
             </div>
         </div>
+        
+        <button id="forcePlayBtn" class="absolute bottom-10 right-10 z-50 bg-white/10 backdrop-blur-md p-4 rounded-full hover:bg-white/30 transition-all hidden">
+            <i class="fas fa-play text-white"></i>
+        </button>
 
-        <!-- Scroll Indicator -->
         <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
             <i class="fas fa-chevron-down text-2xl text-white/50"></i>
         </div>
@@ -281,15 +224,88 @@
     <div class="bg-blue-700 py-6 border-y border-white/10 rotate-1 scale-105 z-30 relative shadow-2xl">
         <div class="marquee-container font-black text-4xl uppercase italic tracking-widest text-black/20">
             <div class="marquee-content">
-                Pepsi Zero Açúcar • Maximo Sabor • Pepsi Zero Açúcar Lima • Refresh Your World • Pepsi Original • Sabor Intenso • Pepsi Zero Açúcar • Maximo Sabor • Pepsi Zero Açúcar Lima • Refresh Your World • Pepsi Original • Sabor Intenso •
+                Pepsi Zero Açúcar • Maximo Sabor • Pepsi Zero Açúcar Lima • Refresh Your World • Pepsi Original • Sabor Intenso • Pepsi Zero Açúcar • Maximo Sabor •
             </div>
         </div>
     </div>
 
+    <!-- NOVA SECÇÃO DE STORYTELLING (Manifesto) -->
+    <section class="py-32 bg-black relative overflow-hidden border-b border-white/5">
+        <!-- Fundo animado abstrato -->
+        <div class="absolute inset-0 z-0">
+             <div class="absolute top-1/2 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] animate-pulse"></div>
+             <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-red-600/10 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-20">
+            
+            <div class="w-full md:w-1/2 space-y-12">
+                <div class="overflow-hidden">
+                    <h2 class="story-title text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none transform translate-y-full">
+                        Mais que <br> <span class="text-blue-600">Refrigerante.</span>
+                    </h2>
+                </div>
+                <div class="space-y-6 text-xl md:text-2xl font-light text-gray-400">
+                    <p class="story-p opacity-0 translate-y-10">Desde 1898, a Pepsi define o ritmo da cultura pop.</p>
+                    <p class="story-p opacity-0 translate-y-10">Não seguimos tendências. <span class="text-white font-bold">Nós as criamos.</span></p>
+                    <p class="story-p opacity-0 translate-y-10">Do palco ao estádio, do clássico ao novo Zero Açúcar. Estamos onde a vibração acontece.</p>
+                </div>
+                <div class="story-line w-0 h-1 bg-gradient-to-r from-blue-600 to-red-600"></div>
+            </div>
+
+            <div class="w-full md:w-1/2 relative h-[500px] flex items-center justify-center story-visual opacity-0 scale-90">
+                <!-- Efeito Visual de Camadas -->
+                <div class="absolute inset-0 border border-white/10 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                <div class="absolute inset-4 border border-blue-500/20 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-center">
+                     <span class="text-9xl font-black text-white/5 absolute">1898</span>
+                     <span class="text-9xl font-black text-white/10 absolute scale-150">2026</span>
+                     <div class="relative z-10 bg-black/50 backdrop-blur-sm p-6 rounded-2xl border border-white/10">
+                        <span class="block text-blue-400 font-bold tracking-[0.3em] text-sm mb-2">A ESSÊNCIA</span>
+                        <span class="block text-4xl font-black text-white">THIRSTY<br>FOR MORE</span>
+                     </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECÇÃO O "URSO" (NOVA ADIÇÃO) -->
+    <section class="py-24 bg-white text-black relative overflow-hidden" id="bear-section">
+        <div class="container mx-auto px-6 relative z-10 flex flex-col items-center">
+            
+            <div class="text-center mb-10 overflow-hidden">
+                <h2 class="bear-title text-4xl md:text-6xl font-black uppercase transform translate-y-full">
+                    Até <span class="text-blue-600">Ele</span> Mudou.
+                </h2>
+            </div>
+
+            <div class="relative w-full max-w-5xl aspect-[16/9] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl bg-gray-100 group">
+                <!-- Imagem do Urso Polar (ATUALIZADA) -->
+                <img src="Image_fx (8).png" 
+                     class="w-full h-full object-cover transform scale-105 transition-transform duration-[2s] hover:scale-100"
+                     alt="Urso Polar na Mesa">
+                
+                <!-- Lata Pepsi (Rolando) -->
+                <!-- Posicionada inicialmente fora do ecrã à direita -->
+                <div class="absolute bottom-[5%] -right-[30%] w-24 md:w-40" id="bear-pepsi">
+                    <img src="PEP-REGULAR-SLEEK-CG.png" 
+                         class="w-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]" 
+                         alt="Lata Pepsi">
+                </div>
+
+                <!-- Texto de Revelação -->
+                <div class="absolute top-10 left-10 md:left-20 bg-black/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 opacity-0" id="bear-text">
+                    <p class="text-white font-bold uppercase tracking-widest text-sm mb-2">Flagrante no Polo Norte</p>
+                    <h3 class="text-white font-black text-2xl md:text-4xl leading-none">O Sabor Intenso <br>Conquistou o Ícone.</h3>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Products Section -->
     <section id="produtos" class="py-32 relative">
-        <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-900/20 to-transparent pointer-events-none"></div>
-        
         <div class="container mx-auto px-6">
             <div class="text-center mb-24 reveal-text">
                 <h2 class="text-5xl md:text-7xl font-black uppercase mb-4">Os Nossos <span class="text-blue-500">Produtos</span></h2>
@@ -298,37 +314,31 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
                 
-                <!-- Product 1: Zero Sugar (Updated to Bottle as requested) -->
+                <!-- Product 1: Zero Sugar -->
                 <div class="product-card group relative">
                     <div class="absolute inset-0 bg-blue-600/5 rounded-3xl transform rotate-3 transition-transform group-hover:rotate-6"></div>
-                    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-10 text-center relative z-10 product-inner h-full flex flex-col justify-between hover:border-blue-500/50 transition-colors">
+                    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-10 text-center relative z-10 product-inner h-full flex flex-col justify-between">
                         <div class="mb-8 relative h-80 flex items-center justify-center">
-                             <!-- Glowing background behind bottle -->
                              <div class="absolute w-40 h-40 bg-blue-500/30 rounded-full blur-3xl group-hover:bg-blue-400/50 transition-all"></div>
-                             <!-- Uses user filename: garrafa-zero-caff.png -->
-                             <img src="garrafa-zero-caff.png" 
+                             <img src="PEP-ZERO-SLEEK-CG.png" 
                                   onerror="this.src='https://pngimg.com/d/pepsi_PNG22.png'; this.style.filter='grayscale(100%) contrast(1.2)'" 
                                   alt="Pepsi Zero Açúcar" 
                                   class="h-full object-contain can-shadow relative z-10 transform group-hover:scale-110 transition-transform duration-500">
                         </div>
                         <div>
                             <h3 class="text-3xl font-black uppercase mb-2">Pepsi <br>Zero Açúcar</h3>
-                            <p class="text-gray-400 text-sm mb-6 uppercase tracking-wider">Máximo Sabor. Zero Açúcar.</p>
-                            <button class="w-full py-3 rounded-xl border border-white/20 hover:bg-white hover:text-black hover:border-white font-bold uppercase tracking-widest transition-all">
-                                Info Produto
-                            </button>
+                            <button class="w-full py-3 rounded-xl border border-white/20 hover:bg-white hover:text-black font-bold uppercase">Info Produto</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Product 2: Zero Sugar Lime (Highlight) -->
+                <!-- Product 2: Zero Sugar Lime -->
                 <div class="product-card group relative md:-mt-12">
                     <div class="absolute inset-0 bg-green-500/10 rounded-3xl transform -rotate-2 transition-transform group-hover:-rotate-3"></div>
                     <div class="bg-gradient-to-b from-gray-900 to-black border border-green-500/30 rounded-3xl p-10 text-center relative z-10 product-inner shadow-[0_0_50px_rgba(0,255,0,0.1)] h-full flex flex-col justify-between">
                         <div class="absolute top-4 right-4 bg-green-500 text-black text-xs font-bold px-3 py-1 rounded-full uppercase">Novo</div>
                         <div class="mb-8 relative h-96 flex items-center justify-center">
                              <div class="absolute w-40 h-40 bg-green-500/20 rounded-full blur-3xl group-hover:bg-green-400/40 transition-all"></div>
-                             <!-- User filename -->
                              <img src="PEP-LIMA-SLEEK-CG.png" 
                                   onerror="this.src='https://freepngimg.com/thumb/pepsi/166348-pepsi-drink-lime-free-download-image.png'" 
                                   alt="Pepsi Zero Lima" 
@@ -336,10 +346,7 @@
                         </div>
                         <div>
                             <h3 class="text-4xl font-black uppercase mb-2 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-lime-300">Zero <br>Lima</h3>
-                            <p class="text-gray-400 text-sm mb-6 uppercase tracking-wider">Toque Refrescante de Lima.</p>
-                            <button class="w-full py-4 rounded-xl bg-green-600 text-white hover:bg-green-500 font-bold uppercase tracking-widest transition-all shadow-lg shadow-green-900/50">
-                                Info Produto
-                            </button>
+                            <button class="w-full py-4 rounded-xl bg-green-600 text-white font-bold uppercase shadow-lg shadow-green-900/50">Info Produto</button>
                         </div>
                     </div>
                 </div>
@@ -347,10 +354,9 @@
                 <!-- Product 3: Regular Blue -->
                 <div class="product-card group relative">
                     <div class="absolute inset-0 bg-blue-600/5 rounded-3xl transform rotate-1 transition-transform group-hover:rotate-2"></div>
-                    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-10 text-center relative z-10 product-inner h-full flex flex-col justify-between hover:border-blue-500/50 transition-colors">
+                    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-10 text-center relative z-10 product-inner h-full flex flex-col justify-between">
                         <div class="mb-8 relative h-80 flex items-center justify-center">
                              <div class="absolute w-40 h-40 bg-blue-600/30 rounded-full blur-3xl group-hover:bg-blue-600/50 transition-all"></div>
-                             <!-- User filename -->
                              <img src="PEP-REGULAR-SLEEK-CG.png" 
                                   onerror="this.src='https://pngimg.com/d/pepsi_PNG22.png'" 
                                   alt="Pepsi Original" 
@@ -358,21 +364,17 @@
                         </div>
                         <div>
                             <h3 class="text-3xl font-black uppercase mb-2 text-blue-400">Pepsi <br>Original</h3>
-                            <p class="text-gray-400 text-sm mb-6 uppercase tracking-wider">Sabor Original.</p>
-                            <button class="w-full py-3 rounded-xl bg-blue-700 hover:bg-blue-600 text-white font-bold uppercase tracking-widest transition-all">
-                                Info Produto
-                            </button>
+                            <button class="w-full py-3 rounded-xl bg-blue-700 text-white font-bold uppercase">Info Produto</button>
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <!-- Zero Caffeine Banner (Full Width) -->
+            <!-- ZERO CAFEÍNA BANNER (IMAGEM CORRIGIDA) -->
             <div class="mt-24 relative rounded-3xl overflow-hidden group">
                 <div class="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-transparent z-10"></div>
-                <!-- Background visual -->
-                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1629203851288-7ececb669e4f?q=80&w=2070')] bg-cover bg-center opacity-30 group-hover:scale-105 transition-transform duration-1000"></div>
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1629203851288-7ececb669e4f?q=80&w=2070')] bg-cover bg-center opacity-30"></div>
                 
                 <div class="relative z-20 p-12 md:p-20 flex flex-col md:flex-row items-center gap-12">
                     <div class="flex-1 text-center md:text-left">
@@ -383,16 +385,12 @@
                             Ver Detalhes
                         </button>
                     </div>
-                    <div class="flex-1 flex justify-center relative">
-                        <!-- User filename: garrafa-zero-caff.png -->
-                        <!-- Added explicit z-index and simplified fallback -->
+                    
+                    <div class="flex-1 flex justify-center relative h-[400px] w-full">
                         <img src="garrafa-zero-caff.png" 
-                             onerror="this.src='https://www.pepsi.com/en-us/uploads/images/can-pepsi-zero-sugar.png'"
                              alt="Garrafa Zero Cafeína" 
-                             class="h-[400px] object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] transform group-hover:rotate-12 transition-transform duration-700 relative z-30">
-                        
-                        <!-- Glow effect behind bottle to verify position -->
-                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/10 rounded-full blur-3xl -z-10"></div>
+                             class="h-full w-auto object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] transform group-hover:rotate-12 transition-transform duration-700 relative z-30 block mx-auto">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/10 rounded-full blur-3xl z-10"></div>
                     </div>
                 </div>
             </div>
@@ -405,16 +403,13 @@
             <h2 class="text-4xl font-black uppercase mb-12 tracking-widest">A Campanha <span class="text-blue-600">Titan</span></h2>
             
             <div class="relative w-full max-w-5xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-[0_0_60px_rgba(0,92,180,0.3)] group border border-white/10">
-                <!-- Video Element using User's Filename -->
-                <!-- Removed fallback source to ensure only user video is attempted -->
                 <video id="mainVideo" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" poster="https://wallpaperaccess.com/full/1330836.jpg">
-                    <!-- Primary Source: Updated to user file -->
+                    <source src="vídeo%20final.mp4" type="video/mp4">
                     <source src="vídeo final.mp4" type="video/mp4">
                 </video>
 
-                <!-- Custom Play Button Overlay -->
                 <div id="playBtn" class="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer group-hover:bg-black/20 transition-all">
-                    <div class="w-24 h-24 bg-red-600/90 rounded-full flex items-center justify-center pl-2 shadow-lg transform group-hover:scale-110 transition-transform duration-300 backdrop-blur-sm">
+                    <div class="w-24 h-24 bg-red-600/90 rounded-full flex items-center justify-center pl-2 shadow-lg backdrop-blur-sm">
                         <i class="fas fa-play text-3xl text-white"></i>
                     </div>
                 </div>
@@ -424,183 +419,115 @@
 
     <!-- Footer -->
     <footer id="contactos" class="bg-black pt-20 pb-10 border-t border-white/10 relative overflow-hidden">
-        <!-- Giant Background Logo -->
-        <div class="absolute -bottom-20 -right-20 opacity-10 pointer-events-none">
-            <img src="https://logos-world.net/wp-content/uploads/2020/04/Pepsi-Logo.png" class="w-[600px] grayscale">
-        </div>
-
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-10 mb-16">
-                <div class="text-center md:text-left">
-                    <h3 class="text-3xl font-black uppercase text-blue-600 mb-4">Pepsi PT</h3>
-                    <div class="flex gap-6 justify-center md:justify-start">
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-blue-800 hover:text-white transition-all"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="flex flex-wrap justify-center gap-8 text-sm font-bold uppercase tracking-widest text-gray-400">
-                    <a href="#" class="hover:text-white transition-colors">Termos & Condições</a>
-                    <a href="#" class="hover:text-white transition-colors">Política de Proteção de Dados</a>
-                    <a href="#" class="hover:text-white transition-colors">Perguntas Frequentes</a>
-                    <a href="#" class="hover:text-white transition-colors">Contactos</a>
-                </div>
-            </div>
-
-            <div class="text-center text-xs text-gray-600 uppercase tracking-widest">
-                &copy; 2026 PepsiCo, Inc. Todos os direitos reservados. Design Conceitual.
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <h3 class="text-3xl font-black uppercase text-blue-600 mb-4">Pepsi PT</h3>
+            <div class="text-center text-xs text-gray-600 uppercase tracking-widest mt-10">
+                &copy; 2026 PepsiCo, Inc. Todos os direitos reservados.
             </div>
         </div>
     </footer>
 
     <script>
-        // Custom Cursor Logic
+        // Custom Cursor
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorOutline = document.querySelector('.cursor-outline');
-
         window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-
-            // Simple follow for dot
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-
-            // Animated trail for outline
-            cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
         });
 
-        // Hover effect for cursor
-        document.querySelectorAll('a, button, .product-card').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursorOutline.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursorOutline.style.backgroundColor = 'transparent';
-            });
-        });
-
-        // ROBUST PRELOADER LOGIC
-        // This ensures the site opens even if a video is broken
+        // Preloader
         document.addEventListener("DOMContentLoaded", () => {
-            let preloaderRemoved = false;
-
-            const removePreloader = () => {
-                if(preloaderRemoved) return;
-                preloaderRemoved = true;
-
+            setTimeout(() => {
                 const tl = gsap.timeline();
-                tl.to(".loader-logo", { duration: 0.5, scale: 0, opacity: 0, ease: "back.in(1.7)" })
+                tl.to(".loader-logo", { duration: 0.5, scale: 0, opacity: 0 })
                   .to("#preloader", { duration: 0.8, y: "-100%", ease: "power4.inOut" })
-                  .to(".hero-content", { 
-                      y: 0, 
-                      opacity: 1, 
-                      duration: 1, 
-                      ease: "power3.out" 
-                  }, "-=0.4");
-            };
-
-            // Option 1: Everything loads fine
-            window.addEventListener('load', removePreloader);
-
-            // Option 2: Safety timer (Force open after 2 seconds no matter what)
-            setTimeout(removePreloader, 2000);
+                  .to(".hero-content", { y: 0, opacity: 1, duration: 1 }, "-=0.4");
+            }, 1000);
         });
 
-
-        // Scroll Animations (GSAP ScrollTrigger)
+        // Scroll Animations
         gsap.registerPlugin(ScrollTrigger);
-
-        // Navbar blur on scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('bg-black/90', 'shadow-lg', 'py-2');
-                nav.classList.remove('py-4');
-            } else {
-                nav.classList.remove('bg-black/90', 'shadow-lg', 'py-2');
-                nav.classList.add('py-4');
-            }
-        });
-
+        
         // Products Reveal
         gsap.utils.toArray('.product-card').forEach((card, i) => {
             gsap.from(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: "top 85%",
-                },
-                y: 100,
-                opacity: 0,
-                duration: 1,
-                delay: i * 0.2,
-                ease: "power3.out"
+                scrollTrigger: { trigger: card, start: "top 85%" },
+                y: 100, opacity: 0, duration: 1, delay: i * 0.2
             });
         });
 
-        // Text Reveals
-        gsap.from(".reveal-text", {
+        // STORYTELLING ANIMATIONS
+        const storyTl = gsap.timeline({
             scrollTrigger: {
-                trigger: ".reveal-text",
+                trigger: ".story-title",
                 start: "top 80%",
-            },
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: "power2.out"
+            }
         });
+        storyTl.to(".story-title", { y: 0, duration: 1, ease: "power4.out" })
+               .to(".story-p", { y: 0, opacity: 1, stagger: 0.2, duration: 0.8 }, "-=0.5")
+               .to(".story-line", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=1")
+               .to(".story-visual", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=1");
+
+        // BEAR ANIMATION (ATUALIZADA PARA ROLAGEM)
+        const bearTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#bear-section",
+                start: "top 60%", // Começa quando a secção está visível
+            }
+        });
+
+        bearTl.to(".bear-title", { y: 0, duration: 0.8, ease: "power3.out" })
+              // Animação da Lata Rolando: Move para a esquerda (x) e Roda (rotation)
+              .fromTo("#bear-pepsi", 
+                  { x: 0, rotation: 0 }, 
+                  { 
+                      right: "35%",       // Pára mais ou menos no meio da mesa (ajustável)
+                      rotation: -720,     // Roda 2 vezes completas (negativo para rolar para a esquerda)
+                      duration: 2.5, 
+                      ease: "power2.out"  // Desacelera no fim como uma lata real
+                  }, 
+                  "-=0.4"
+              )
+              .to("#bear-text", { opacity: 1, duration: 1 }, "-=1");
+
 
         // Video Player Logic
-        const videoContainer = document.querySelector('.aspect-video');
         const video = document.getElementById('mainVideo');
         const playBtn = document.getElementById('playBtn');
-        
         if (playBtn && video) {
             playBtn.addEventListener('click', () => {
-                if (video.paused) {
-                    video.play();
-                    gsap.to(playBtn, { opacity: 0, scale: 1.5, pointerEvents: 'none' });
-                    video.style.opacity = '1';
-                    video.controls = true;
-                }
-            });
-
-            video.addEventListener('pause', () => {
-                gsap.to(playBtn, { opacity: 1, scale: 1, pointerEvents: 'all' });
-                video.controls = false;
+                video.play();
+                gsap.to(playBtn, { opacity: 0, scale: 1.5, pointerEvents: 'none' });
+                video.style.opacity = '1';
+                video.controls = true;
             });
         }
 
-        // FORCE HERO VIDEO AUTOPLAY
-        // Browser policy blocks autoplay unless muted. This script forces it.
+        // FORCE HERO AUTOPLAY
         const heroVideo = document.getElementById('heroVideo');
+        const forceBtn = document.getElementById('forcePlayBtn');
+        
         if (heroVideo) {
-            heroVideo.muted = true; // Ensure it is muted for browser policy
-            
-            const playPromise = heroVideo.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Autoplay started!
-                    console.log("Hero video playing");
-                })
-                .catch(error => {
-                    // Auto-play was prevented
-                    console.log("Autoplay prevented, retrying on interaction");
-                    // Fallback: Play on first click anywhere
-                    document.body.addEventListener('click', () => {
-                        heroVideo.play();
-                    }, { once: true });
+            heroVideo.muted = true; 
+            let playAttempt = setInterval(() => {
+                heroVideo.play().then(() => {
+                    clearInterval(playAttempt);
+                    console.log("Video playing successfully");
+                    forceBtn.classList.add('hidden');
+                }).catch(e => {
+                    console.log("Autoplay blocked, showing button");
+                    forceBtn.classList.remove('hidden');
                 });
-            }
-        }
+            }, 1000); 
 
+            forceBtn.addEventListener('click', () => {
+                heroVideo.play();
+                heroVideo.muted = false; 
+                forceBtn.classList.add('hidden');
+            });
+        }
     </script>
 </body>
 </html>
