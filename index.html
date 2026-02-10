@@ -73,16 +73,19 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 10000; display: flex;
             justify-content: center; align-items: center;
+            transition: transform 0.8s ease-in-out;
         }
         .loader-logo { width: 150px; animation: pulse 1s infinite alternate; }
         @keyframes pulse { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.1); opacity: 1; } }
+        
+        .loaded #preloader { transform: translateY(-100%); }
 
         nav { backdrop-filter: blur(10px); background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="antialiased selection:bg-blue-600 selection:text-white custom-cursor">
 
-    <!-- Cursor -->
+    <!-- Cursor Elements -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
@@ -99,7 +102,7 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
         <div class="logo-container cursor-pointer group">
-            <!-- LOGO PRINCIPAL -->
+            <!-- LOGO: PT-Logo-Novo2_0.png -->
             <img src="PT-Logo-Novo2_0.png" 
                  onerror="this.src='https://logos-world.net/wp-content/uploads/2020/04/Pepsi-Logo.png'"
                  alt="Pepsi Logo" 
@@ -123,12 +126,14 @@
         <div class="absolute inset-0 w-full h-full z-0 bg-black">
             <div class="absolute inset-0 bg-black/40 z-10"></div>
             
-            <!-- HERO VIDEO -->
+            <!-- HERO VIDEO: Múltiplas tentativas de formato de nome -->
             <video id="heroVideo" autoplay loop muted playsinline webkit-playsinline class="w-full h-full object-cover opacity-80" poster="https://images.unsplash.com/photo-1629203851122-3726ec685227?q=80&w=2070">
-                <source src="vídeo%20inicial.mp4" type="video/mp4">
+                <!-- 1. Nome Exato (Prioridade Máxima) -->
                 <source src="vídeo inicial.mp4" type="video/mp4">
+                <!-- 2. Nome com codificação URL (Para servidores que não gostam de espaços/acentos) -->
+                <source src="vídeo%20inicial.mp4" type="video/mp4">
+                <!-- 3. Variação sem acento (comum erro de digitação) -->
                 <source src="video inicial.mp4" type="video/mp4">
-                <source src="videoinicial.mp4" type="video/mp4">
             </video>
         </div>
 
@@ -363,118 +368,117 @@
     </footer>
 
     <script>
-        // SEGURANÇA TOTAL DE SCRIPTS
-        // Espera a página carregar completamente antes de rodar animações
-        window.addEventListener('load', () => {
-            console.log("Site carregado. Iniciando animações...");
+        // Função para remover preloader e iniciar animações
+        function initSite() {
+            // Verificar se já foi iniciado para evitar loops
+            if (document.body.classList.contains('loaded')) return;
+            document.body.classList.add('loaded');
 
-            // 1. Remover Preloader
-            const removePreloader = () => {
-                const preloader = document.getElementById('preloader');
-                if(preloader) {
+            // Animação de saída do preloader
+            const preloader = document.getElementById('preloader');
+            if(preloader) {
+                // Remove via CSS e GSAP para garantir
+                if(typeof gsap !== 'undefined') {
                     gsap.to(preloader, { 
                         y: "-100%", 
                         duration: 0.8, 
                         ease: "power4.inOut",
                         onComplete: () => {
-                            // Ativar cursor personalizado só depois do load
                             document.body.classList.add('custom-cursor');
-                            initAnimations();
+                            if(typeof ScrollTrigger !== 'undefined') {
+                                ScrollTrigger.refresh();
+                            }
                         }
                     });
-                    
                     // Animação inicial do Hero
                     gsap.to(".hero-content", { y: 0, opacity: 1, duration: 1, delay: 0.5 });
+                } else {
+                    // Fallback CSS se GSAP falhar
+                    preloader.style.transform = "translateY(-100%)";
                 }
-            };
-
-            // Remove preloader após 1 segundo (garantia)
-            setTimeout(removePreloader, 1000);
-
-            // 2. Cursor Personalizado
-            const cursorDot = document.querySelector('.cursor-dot');
-            const cursorOutline = document.querySelector('.cursor-outline');
+            }
             
-            if(cursorDot && cursorOutline) {
-                window.addEventListener('mousemove', (e) => {
-                    cursorDot.style.left = `${e.clientX}px`;
-                    cursorDot.style.top = `${e.clientY}px`;
-                    
-                    // Animação suavizada para o outline
-                    cursorOutline.animate({ 
-                        left: `${e.clientX}px`, 
-                        top: `${e.clientY}px` 
-                    }, { duration: 500, fill: "forwards" });
-                });
+            // Iniciar animações de scroll
+            initScrollAnimations();
+        }
+
+        function initScrollAnimations() {
+            if(typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+                console.warn("GSAP não carregou.");
+                return;
             }
-
-            // 3. Inicializar Animações GSAP
-            function initAnimations() {
-                if(typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-                    console.error("GSAP não carregou. Verifique sua conexão.");
-                    return;
-                }
-                
-                gsap.registerPlugin(ScrollTrigger);
-                
-                // Products Reveal
-                gsap.utils.toArray('.product-card').forEach((card, i) => {
-                    gsap.from(card, {
-                        scrollTrigger: { trigger: card, start: "top 85%" },
-                        y: 100, opacity: 0, duration: 1, delay: i * 0.2
-                    });
+            
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Products Reveal
+            gsap.utils.toArray('.product-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: { trigger: card, start: "top 85%" },
+                    y: 100, opacity: 0, duration: 1, delay: i * 0.2
                 });
+            });
 
-                // Storytelling
-                gsap.timeline({
-                    scrollTrigger: { trigger: ".story-title", start: "top 80%" }
-                })
-                .to(".story-title", { y: 0, duration: 1, ease: "power4.out" })
-                .to(".story-p", { y: 0, opacity: 1, stagger: 0.2, duration: 0.8 }, "-=0.5")
-                .to(".story-line", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=1")
-                .to(".story-visual", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=1");
+            // Storytelling
+            const storyTl = gsap.timeline({
+                scrollTrigger: { trigger: ".story-title", start: "top 80%" }
+            });
+            storyTl.to(".story-title", { y: 0, duration: 1, ease: "power4.out" })
+                   .to(".story-p", { y: 0, opacity: 1, stagger: 0.2, duration: 0.8 }, "-=0.5")
+                   .to(".story-line", { width: "100%", duration: 1.5, ease: "power2.inOut" }, "-=1")
+                   .to(".story-visual", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=1");
 
-                // BEAR ANIMATION (Lata Rolando)
-                const bearTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#bear-section",
-                        start: "top 60%",
-                    }
-                });
+            // BEAR ANIMATION (Lata Rolando)
+            const bearTl = gsap.timeline({
+                scrollTrigger: { trigger: "#bear-section", start: "top 60%" }
+            });
 
-                bearTl.to(".bear-title", { y: 0, duration: 0.8, ease: "power3.out" })
-                      .to("#bear-pepsi", { 
-                          xPercent: -350, 
-                          rotation: -720, 
-                          duration: 2.5, 
-                          ease: "power2.out" 
-                      }, "-=0.4")
-                      .to("#bear-text", { opacity: 1, duration: 1 }, "-=1");
-            }
+            bearTl.to(".bear-title", { y: 0, duration: 0.8, ease: "power3.out" })
+                  .to("#bear-pepsi", { 
+                      xPercent: -350, 
+                      rotation: -720, 
+                      duration: 2.5, 
+                      ease: "power2.out" 
+                  }, "-=0.4")
+                  .to("#bear-text", { opacity: 1, duration: 1 }, "-=1");
+        }
 
-            // 4. Video Play Logic (Manual & Auto Force)
+        // EVENTOS DE CARREGAMENTO
+        // 1. Tenta carregar normalmente
+        window.addEventListener('load', initSite);
+
+        // 2. Temporizador de Segurança (Força a abertura após 2 segundos se algo falhar)
+        setTimeout(initSite, 2000);
+
+        // Video Player Logic
+        document.addEventListener('DOMContentLoaded', () => {
             const mainVideo = document.getElementById('mainVideo');
             const playBtn = document.getElementById('playBtn');
-            
+            const heroVideo = document.getElementById('heroVideo');
+            const forceBtn = document.getElementById('forcePlayBtn');
+
+            // Video Principal
             if (playBtn && mainVideo) {
                 playBtn.addEventListener('click', () => {
                     mainVideo.play();
-                    gsap.to(playBtn, { opacity: 0, scale: 1.5, pointerEvents: 'none' });
+                    if(typeof gsap !== 'undefined') {
+                        gsap.to(playBtn, { opacity: 0, scale: 1.5, pointerEvents: 'none' });
+                    } else {
+                        playBtn.style.display = 'none';
+                    }
                     mainVideo.style.opacity = '1';
                     mainVideo.controls = true;
                 });
             }
 
-            // Tenta forçar o autoplay do Hero Video
-            const heroVideo = document.getElementById('heroVideo');
-            const forceBtn = document.getElementById('forcePlayBtn');
-            
+            // Hero Video Autoplay
             if (heroVideo) {
-                heroVideo.muted = true; // Obrigatório
-                heroVideo.play().catch(() => {
-                    // Se falhar, mostra botão de play discreto
-                    if(forceBtn) forceBtn.classList.remove('hidden');
-                });
+                heroVideo.muted = true;
+                const playPromise = heroVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        if(forceBtn) forceBtn.classList.remove('hidden');
+                    });
+                }
                 
                 if(forceBtn) {
                     forceBtn.addEventListener('click', () => {
@@ -482,6 +486,17 @@
                         forceBtn.classList.add('hidden');
                     });
                 }
+            }
+
+            // Cursor Customizado
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+            if(cursorDot && cursorOutline) {
+                window.addEventListener('mousemove', (e) => {
+                    cursorDot.style.left = `${e.clientX}px`;
+                    cursorDot.style.top = `${e.clientY}px`;
+                    cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
+                });
             }
         });
     </script>
